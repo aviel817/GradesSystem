@@ -1,7 +1,5 @@
 import React, {useEffect, useState} from 'react'
 import { BrowserRouter, Routes, Route} from 'react-router-dom';
-import Home from './components/Home';
-import About from './components/About';
 import StudentsGrades from './components/StudentsGrades';
 import Navbar from './components/Navbar';
 import Subjects from './components/Subjects';
@@ -30,8 +28,6 @@ function App() {
     <BrowserRouter>
       <Navbar />
       <Routes>
-        <Route exact path="/" element={<Home />} />
-        <Route path="/about" element={<About />} />
         <Route path="/studentsgrades" element={<StudentsGrades />} />
         <Route path="/subjects" element={<Subjects />} />
       </Routes>
