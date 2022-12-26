@@ -4,6 +4,7 @@ import StudentsGrades from './components/StudentsGrades';
 import Navbar from './components/Navbar';
 import Subjects from './components/Subjects';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import Login from './components/Login';
 
 function App() {
   const [backendData, setBackendData] = useState(null)
@@ -30,6 +31,7 @@ function App() {
       <Routes>
         <Route path="/studentsgrades" element={<StudentsGrades />} />
         <Route path="/subjects" element={<Subjects />} />
+        <Route path="/login" element={<Login />} />
       </Routes>
     </BrowserRouter>
   );
