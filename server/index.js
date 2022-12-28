@@ -4,9 +4,16 @@ const app = express()
 secrets = require('./.secrets')
 
 const dbURL = secrets.dbURL
+const subjectsList = ["Calculus 1", "Calculus 2", "English", "Algebra 1", "Algebra 2", "Physics 1", "Operating Systems", "Computer graphics"]
+// Login -> Subjects -> Subject Grades
 
 app.get('/api', (req, res) => {
     res.json({"users": ["user1", "user2", "user3"]})
+    // res.send("hello world!")
+})
+
+app.get('/subjects', (req, res) => {
+    res.send(JSON.stringify(subjectsList))
     // res.send("hello world!")
 })
 

@@ -1,25 +1,35 @@
-import React from 'react'
+import React, {useEffect, useState} from 'react'
 import Button from 'react-bootstrap/Button';
 import Card from 'react-bootstrap/Card';
 import { FaPlusCircle } from 'react-icons/fa';
+import { Link } from 'react-router-dom'
 
 
 const Subjects = () => {
 
-    const subjectsList = ["Math", "Bible", "English", "Literature", "Physics", "Science"]
+    const [subjectsList, setSubjectsList] = useState(null)
+  
+    useEffect(() => {
+      fetch("/subjects")
+      .then(response => response.json())
+      .then(data => setSubjectsList(data))
+    }, [])
 
     return (
         <div>
         <div className='row row-cols-4 g-4' style={{margin: '40px' }}>
-            { subjectsList.map((subject, i) => {
+            { !(subjectsList) ? "Loading" : subjectsList.map((subject, i) => {
                     return (
-                    <div className='col'>
+                    <div className='col' key={i}>
                     <Card style={{ width: '18rem'}}>
                         <Card.Body>
                         <Card.Title>{subject}</Card.Title>
                         {/*<Card.Text>
                         </Card.Text>*/}
-                        <Button variant="primary">Go somewhere</Button>
+                        <Link to={"/subjects/"+subject}>
+                                <Button variant="primary">Grades</Button>
+                        </Link>
+
                         </Card.Body>
                     </Card>
                     </div>
