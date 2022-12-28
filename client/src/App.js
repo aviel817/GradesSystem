@@ -3,6 +3,7 @@ import { BrowserRouter, Routes, Route} from 'react-router-dom';
 import StudentsGrades from './components/StudentsGrades';
 import Navbar from './components/Navbar';
 import Subjects from './components/Subjects';
+import Students from './components/Students';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 function App() {
@@ -30,6 +31,7 @@ function App() {
       <Routes>
         <Route path="/studentsgrades" element={<StudentsGrades />} />
         <Route path="/subjects" element={<Subjects />} />
+        <Route path="/students" element={<Students />} />
       </Routes>
     </BrowserRouter>
   );
