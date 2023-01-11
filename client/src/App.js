@@ -30,6 +30,7 @@ function App() {
     <BrowserRouter>
       <Navbar />
       <Routes>
+        <Route path="/" element={<Subjects />} />
         <Route path="/studentsgrades" element={<StudentsGrades />} />
         <Route path="/subjects" element={<Subjects />} />
         <Route path="/students" element={<Students />} />
