@@ -6,6 +6,9 @@ import Subjects from './components/Subjects';
 import Students from './components/Students';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Login from './components/Login';
+import Logout from './components/Logout';
+import RequireAuth from './components/RequireAuth';
+import { AuthProvider } from './context/AuthProvider';
 
 function App() {
   const [backendData, setBackendData] = useState(null)
@@ -28,14 +31,22 @@ function App() {
   */
   return (
     <BrowserRouter>
-      <Navbar />
-      <Routes>
-        <Route path="/" element={<Subjects />} />
-        <Route path="/studentsgrades" element={<StudentsGrades />} />
-        <Route path="/subjects" element={<Subjects />} />
-        <Route path="/students" element={<Students />} />
-        <Route path="/login" element={<Login />} />
-      </Routes>
+      <AuthProvider>
+        <Routes>
+          <Route element={<Navbar />}>
+            <Route element={<RequireAuth />}>
+              <Route path="/" element={<Subjects />} />
+              <Route path="/studentsgrades" element={<StudentsGrades />} />
+              <Route path="/subjects" element={<Subjects />} />
+              <Route path="/students" element={<Students />} />
+              <Route path="/logout" element={<Logout />} />
+            </Route>
+            <Route path="/login" element={<Login />} />
+
+
+          </Route>
+        </Routes>
+      </AuthProvider>
     </BrowserRouter>
   );
 

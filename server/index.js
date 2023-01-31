@@ -8,7 +8,6 @@ const bodyParser = require('body-parser');
 const User = require("./models/User")
 
 mongoose.set('strictQuery', false);
-const urlencodedParser = bodyParser.urlencoded({ extended: false });
 
 const dbURL = secrets.dbURL
 const cookieSecret = secrets.cookieSecret
@@ -18,6 +17,7 @@ const cookieSecret = secrets.cookieSecret
 const subjectsList = ["Calculus 1", "Calculus 2", "English", "Algebra 1", "Algebra 2", "Physics 1", "Operating Systems", "Computer graphics"]
 // Login -> Subjects -> Subject Grades
 
+app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.json());
 
 const store = new MongoDBStore({
@@ -59,6 +59,13 @@ app.get('/login', isAuth, (req, res) => {
     res.status(200).send()
   });
 
+app.post('/logout', (req, res) => {
+    req.session.destroy((err) => {
+        if (err) throw err;
+        res.status(200).send()
+    });
+});
+
 app.post('/login', async (req, res) => {
     console.log(req.body)
     const id = req.body.id
@@ -83,7 +90,7 @@ app.post('/login', async (req, res) => {
     } else {
         return res.status(401).send()
     }
-    res.status(200).send()
+    res.status(200).send({role: "lecturer"})
 })
 
 app.listen(5000, ()=> {

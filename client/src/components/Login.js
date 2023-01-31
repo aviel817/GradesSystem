@@ -1,8 +1,16 @@
 import React, {useEffect, useState, useRef} from 'react'
 import '../style.css'; 
-import { useNavigate } from 'react-router-dom'
+import useAuth from '../hooks/useAuth';
+import { useNavigate, useLocation } from 'react-router-dom'
+
 
 const Login = () => {
+    const { setAuth } = useAuth();
+
+    const navigate = useNavigate()
+    const location = useLocation()
+    const from = location.state?.from?.pathname || "/"
+    console.log(from)
 
     const idRef = useRef()
     const errRef = useRef()
@@ -10,8 +18,6 @@ const Login = () => {
     const [id, setID] = useState('')
     const [password, setPassword] = useState('')
     const [errMsg, setErrMsg] = useState('')
-    const [success, setSuccess] = useState(false)
-    const navigate = useNavigate();
 
     useEffect(() => {
         idRef.current.focus()
@@ -36,7 +42,8 @@ const Login = () => {
                 body: JSON.stringify({
                         "id": id,
                         "password": password
-                      })
+                      }),
+                credentials: "include"
             })
             console.log(response)
             if (response.status === 400)
@@ -48,7 +55,13 @@ const Login = () => {
                 setErrMsg('Wrong ID or Password!')
                 errRef.current.focus()
             } else {
-                return navigate('/') 
+                const data = await response.json()
+                const role = data.role
+                console.log(role)
+                if (role) {
+                    setAuth({id, password, role})
+                    return navigate(from, {replace: true}) 
+                }
             }
         } catch (err) {
             console.log(err)

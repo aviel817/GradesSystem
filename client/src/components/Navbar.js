@@ -1,25 +1,32 @@
 import React from 'react'
-import { Link } from 'react-router-dom'
+import { Link, Outlet } from 'react-router-dom'
+import useAuth from "../hooks/useAuth";
+
 
 const Navbar = () => {
-  return (
-	<nav>
-		<ul>
-			<li>
-				<Link to="/studentsgrades">Students Grades</Link>
-			</li>
-			<li>
-				<Link to="/subjects">Subjects</Link>
-			</li>
-			<li>
-				<Link to="/students">Students</Link>
-			</li>
-			<li>
-				<Link to="/login">Login</Link>
-			</li>
-		</ul>
-	</nav>
-  )
+	let { auth } = useAuth();
+
+	return (
+		<nav>
+			<ul>
+				<li>
+					<Link to="/studentsgrades">Students Grades</Link>
+				</li>
+				<li>
+					<Link to="/subjects">Subjects</Link>
+				</li>
+				<li>
+					<Link to="/students">Students</Link>
+				</li>
+				{ (auth?.id) && 
+				<li>
+					<Link to="/logout">Logout</Link>
+				</li> 
+				}
+			</ul>
+			<Outlet />
+		</nav>
+	)
 }
 
 export default Navbar;
