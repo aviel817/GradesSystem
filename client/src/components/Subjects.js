@@ -1,7 +1,6 @@
 import React, {useEffect, useState} from 'react'
 import Button from 'react-bootstrap/Button';
 import Card from 'react-bootstrap/Card';
-import { FaPlusCircle } from 'react-icons/fa';
 import { Link } from 'react-router-dom'
 
 
@@ -37,9 +36,7 @@ const Subjects = () => {
             })
             }
       </div>
-        <div className='row g-4' style={{textAlign: 'right', marginRight: '250px'}}>
-           <h1><FaPlusCircle /></h1>
-        </div>
+
       </div>
     );
 }
