@@ -1,5 +1,6 @@
 import React from 'react'
 import Table from './Table';
+import { FaPlusCircle } from 'react-icons/fa';
 
 
 const StudentsList = () => {
@@ -9,8 +10,13 @@ const StudentsList = () => {
     const tblHeaders = ["#", "First Name", "Last Name", "ID", "Courses"]
     return (
         <div>
-            <h1>Students List</h1>
-            <Table data={students} headers={tblHeaders} />
+            <div>
+                <h1>Students List</h1>
+                <Table data={students} headers={tblHeaders} />
+            </div>
+            <div className='row g-4' style={{textAlign: 'right', marginRight: '250px'}}>
+                <h1><FaPlusCircle /></h1>
+            </div>
         </div>
     );
 }
