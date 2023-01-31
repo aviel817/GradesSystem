@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 const gradeSchema = new mongoose.Schema({
-    userID: mongoose.Types.ObjectId,
+    userID: Number,
     subjectID: mongoose.Types.ObjectId,
     type: String,
     grade: Number,

@@ -36,9 +36,9 @@ function App() {
           <Route element={<Navbar />}>
             <Route element={<RequireAuth />}>
               <Route path="/" element={<Subjects />} />
-              <Route path="/studentsgrades" element={<StudentsGrades />} />
               <Route path="/subjects" element={<Subjects />} />
               <Route path="/students" element={<Students />} />
+              <Route path="/subjects/:name" element={<StudentsGrades />} />
               <Route path="/logout" element={<Logout />} />
             </Route>
             <Route path="/login" element={<Login />} />

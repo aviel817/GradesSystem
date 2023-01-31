@@ -10,9 +10,6 @@ const Navbar = () => {
 		<nav>
 			<ul>
 				<li>
-					<Link to="/studentsgrades">Students Grades</Link>
-				</li>
-				<li>
 					<Link to="/subjects">Subjects</Link>
 				</li>
 				<li>

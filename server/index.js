@@ -84,12 +84,30 @@ app.get('/subjects', isAuth, async (req, res) => {
 
 app.get('/subjects/:name', isAuth, async (req, res) => {
     const userID = req.session.userID
+    console.log("entered")
     const subjectName = req.params.name
-    const subjectObj = Subject.findOne({name: subjectName})
+    const subjectObj = await Subject.findOne({name: subjectName})
     if (subjectObj)
     {
-        const grades = await Grade.find({subjectID: subjectObj.name})
-        res.status(200).send(JSON.stringify(grades))
+        const grades = await Grade.find({subjectID: subjectObj._id})
+
+        const gradesTblInfo = await Promise.all(grades.map(async (grade, i) => {
+            let user = await User.findOne({ID: grade.userID})
+
+            let gradeTblInfo =  {
+                                    Num: i+1,
+                                    Firstname: user.firstName,
+                                    Lastname: user.lastName,
+                                    ID: user.ID,
+                                    Type: grade.type,
+                                    Grade: grade.grade,
+                                    Date: grade.date
+                                }
+            return gradeTblInfo
+        }))
+        
+        console.log(gradesTblInfo)
+        res.status(200).send(JSON.stringify(gradesTblInfo))
     }
 
     res.status(400).send()
