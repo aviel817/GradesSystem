@@ -6,6 +6,7 @@ const userSchema = new mongoose.Schema({
     role: String,
     ID: Number,
     password: String,
+    subjects: [mongoose.Types.ObjectId]
 }, {
     collection: 'users'
 });

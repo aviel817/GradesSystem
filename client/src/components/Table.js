@@ -4,7 +4,7 @@ const Table = (props) => {
             <thead>
                 <tr>
                     { props.headers.map((header, i) => {
-                        return (<th>{header}</th>);
+                        return (<th key={i}>{header}</th>);
                     }) }
                 </tr>
             </thead>
@@ -13,7 +13,7 @@ const Table = (props) => {
                 return (
                 <tr key={i}>
                     {row.map((col, k) => { 
-                        return (<td>{col}</td>);
+                        return (<td key={k}>{col}</td>);
                     })}
                 </tr>
                 )})}
