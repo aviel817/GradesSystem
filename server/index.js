@@ -37,25 +37,33 @@ app.use(
 );
 
 const isAuth = (req, res, next) => {
-    if (req.session.isAuth)
+    if (!req.session.isAuth)
     {
         return res.status(400).send()
     }
     next()
   };
 
+const reqLogin = (req, res, next) => {
+    if (req.session.isAuth)
+    {
+        return res.status(400).send()
+    }
+    next()
+};
 
-app.get('/api', (req, res) => {
+
+app.get('/api', isAuth, (req, res) => {
     res.json({"users": ["user1", "user2", "user3"]})
     // res.send("hello world!")
 })
 
-app.get('/subjects', (req, res) => {
+app.get('/subjects', isAuth, (req, res) => {
     res.send(JSON.stringify(subjectsList))
     // res.send("hello world!")
 })
 
-app.get('/login', isAuth, (req, res) => {
+app.get('/login', reqLogin, (req, res) => {
     res.status(200).send()
   });
 
