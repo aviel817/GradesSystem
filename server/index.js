@@ -84,7 +84,6 @@ app.get('/subjects', isAuth, async (req, res) => {
 
 app.get('/subjects/:name', isAuth, async (req, res) => {
     const userID = req.session.userID
-    console.log("entered")
     const subjectName = req.params.name
     const subjectObj = await Subject.findOne({name: subjectName})
     if (subjectObj)
@@ -95,9 +94,9 @@ app.get('/subjects/:name', isAuth, async (req, res) => {
             let user = await User.findOne({ID: grade.userID})
 
             let gradeTblInfo =  {
-                                    Num: i+1,
-                                    Firstname: user.firstName,
-                                    Lastname: user.lastName,
+                                    "#": i+1,
+                                    "First Name": user.firstName,
+                                    "Last Name": user.lastName,
                                     ID: user.ID,
                                     Type: grade.type,
                                     Grade: grade.grade,
@@ -106,8 +105,31 @@ app.get('/subjects/:name', isAuth, async (req, res) => {
             return gradeTblInfo
         }))
         
-        console.log(gradesTblInfo)
         res.status(200).send(JSON.stringify(gradesTblInfo))
+    }
+
+    res.status(400).send()
+})
+
+app.get('/subjects/:name/students', isAuth, async (req, res) => {
+    const userID = req.session.userID
+    const subjectName = req.params.name
+    const subjectObj = await Subject.findOne({name: subjectName})
+    if (subjectObj)
+    {
+        const users = await User.find({subjects: subjectObj._id})
+        const studentsList = users.map((user, i) => {
+            let studentInfo = {
+                                "#": i+1, 
+                                "First Name": user.firstName, 
+                                "Last Name": user.lastName, 
+                                "ID": user.ID
+                              }
+            return studentInfo
+        })
+        
+        
+        res.status(200).send(JSON.stringify(studentsList))
     }
 
     res.status(400).send()

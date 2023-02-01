@@ -37,8 +37,8 @@ function App() {
             <Route element={<RequireAuth />}>
               <Route path="/" element={<Subjects />} />
               <Route path="/subjects" element={<Subjects />} />
-              <Route path="/students" element={<Students />} />
               <Route path="/subjects/:name" element={<StudentsGrades />} />
+              <Route path="/subjects/:name/students" element={<Students />} />
               <Route path="/logout" element={<Logout />} />
             </Route>
             <Route path="/login" element={<Login />} />

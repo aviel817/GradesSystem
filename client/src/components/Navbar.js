@@ -12,9 +12,6 @@ const Navbar = () => {
 				<li>
 					<Link to="/subjects">Subjects</Link>
 				</li>
-				<li>
-					<Link to="/students">Students</Link>
-				</li>
 				{ (auth?.id) && 
 				<li>
 					<Link to="/logout">Logout</Link>
