@@ -1,25 +1,30 @@
 const Table = (props) => {
-    return (
-        <table>
-            <thead>
-                <tr>
-                    { props.headers.map((header, i) => {
-                        return (<th>{header}</th>);
-                    }) }
-                </tr>
-            </thead>
-            <tbody>
-                {props.data.map((row, i) => {
-                return (
-                <tr key={i}>
-                    {row.map((col, k) => { 
-                        return (<td>{col}</td>);
-                    })}
-                </tr>
-                )})}
-            </tbody>
-        </table>
-    );
+    console.log(props)
+    if (props?.data && props?.headers)
+    {
+        return (
+            <table>
+                <thead>
+                    <tr>
+                        { props.headers.map((header, i) => {
+                            return (<th key={i}>{header}</th>);
+                        }) }
+                    </tr>
+                </thead>
+                <tbody>
+                    {props.data.map((row, i) => {
+                    return (
+                    <tr key={i}>
+                        { props.headers.map((header, k) => {
+                            return (<td key={i+k}>{row[header]}</td>)
+                          })
+                        }
+                    </tr>
+                    )})}
+                </tbody>
+            </table>
+        );
+    }
 }
 
 export default Table;

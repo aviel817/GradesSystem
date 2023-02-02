@@ -6,6 +6,8 @@ const expressSession = require('express-session')
 const MongoDBStore = require('connect-mongodb-session')(expressSession);
 const bodyParser = require('body-parser');
 const User = require("./models/User")
+const Subject = require("./models/Subject")
+const Grade = require("./models/Grade")
 
 mongoose.set('strictQuery', false);
 
@@ -14,8 +16,19 @@ const cookieSecret = secrets.cookieSecret
 
 
 
-const subjectsList = ["Calculus 1", "Calculus 2", "English", "Algebra 1", "Algebra 2", "Physics 1", "Operating Systems", "Computer graphics"]
 // Login -> Subjects -> Subject Grades
+function getSubjects(userID)
+{
+    return User.findById(userID).then((user) => user.subjects)
+}
+
+function getSubjectsName(subjectIDS)
+{
+    const subjectNames = subjectIDS.map(async (id, i) => {
+        return Subject.findById(id).then((subject) => subject.name)
+    })
+    return Promise.all(subjectNames)
+}
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.json());
@@ -58,9 +71,68 @@ app.get('/api', isAuth, (req, res) => {
     // res.send("hello world!")
 })
 
-app.get('/subjects', isAuth, (req, res) => {
+/**
+ * Show relevant subjects
+ */
+app.get('/subjects', isAuth, async (req, res) => {
+    const userID = req.session.userID
+    const subjectsIDSList = await getSubjects(userID)
+    const subjectsList = await getSubjectsName(subjectsIDSList)
+
     res.send(JSON.stringify(subjectsList))
-    // res.send("hello world!")
+})
+
+app.get('/subjects/:name', isAuth, async (req, res) => {
+    const userID = req.session.userID
+    const subjectName = req.params.name
+    const subjectObj = await Subject.findOne({name: subjectName})
+    if (subjectObj)
+    {
+        const grades = await Grade.find({subjectID: subjectObj._id})
+
+        const gradesTblInfo = await Promise.all(grades.map(async (grade, i) => {
+            let user = await User.findOne({ID: grade.userID})
+
+            let gradeTblInfo =  {
+                                    "#": i+1,
+                                    "First Name": user.firstName,
+                                    "Last Name": user.lastName,
+                                    ID: user.ID,
+                                    Type: grade.type,
+                                    Grade: grade.grade,
+                                    Date: grade.date
+                                }
+            return gradeTblInfo
+        }))
+        
+        res.status(200).send(JSON.stringify(gradesTblInfo))
+    }
+
+    res.status(400).send()
+})
+
+app.get('/subjects/:name/students', isAuth, async (req, res) => {
+    const userID = req.session.userID
+    const subjectName = req.params.name
+    const subjectObj = await Subject.findOne({name: subjectName})
+    if (subjectObj)
+    {
+        const users = await User.find({subjects: subjectObj._id})
+        const studentsList = users.map((user, i) => {
+            let studentInfo = {
+                                "#": i+1, 
+                                "First Name": user.firstName, 
+                                "Last Name": user.lastName, 
+                                "ID": user.ID
+                              }
+            return studentInfo
+        })
+        
+        
+        res.status(200).send(JSON.stringify(studentsList))
+    }
+
+    res.status(400).send()
 })
 
 app.get('/login', reqLogin, (req, res) => {

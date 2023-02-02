@@ -1,11 +1,12 @@
 const mongoose = require('mongoose');
 
 const userSchema = new mongoose.Schema({
-    firstname: String,
-    lastname: String,
+    firstName: String,
+    lastName: String,
     role: String,
     ID: Number,
     password: String,
+    subjects: [mongoose.Types.ObjectId]
 }, {
     collection: 'users'
 });
