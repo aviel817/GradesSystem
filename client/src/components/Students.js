@@ -36,10 +36,11 @@ const StudentsList = () => {
         button.addEventListener('click', () =>{
         const popup = button.closet('.popup')
         closePopup(popup)  
-        })   
+        })
     })
     
     function closePopup(popup){
+        console.log("need to close")
         if(popup == null) return
         popup.classList.remove('active')
         overlay.classList.remove('active')
@@ -68,10 +69,13 @@ const StudentsList = () => {
                 </div>
                 <div class = "popup-body">
                     <p>Please Enter Student Id: <input type="text" name="id" id="id" ></input></p>
-                    <button data-close-button class="close-button">add </button>
+                    <button data-close-button class="close-button">add student </button>
                 </div>  
             <div id = "overlay"></div>
          </div>
+         <div className='row g-4' style={{textAlign: 'right', marginRight: '250px'}}>
+                <h1><FaPlusCircle /></h1>
+            </div>
          </div>
     );
 }
