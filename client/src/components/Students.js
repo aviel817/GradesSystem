@@ -2,6 +2,7 @@ import React, {useEffect, useState} from 'react'
 import Table from './Table';
 import { FaPlusCircle } from 'react-icons/fa';
 import './Table.css'
+import useAuth from "../hooks/useAuth";
 
 const StudentsList = () => {
     const [studentsList, setStudentsList] = useState(null)
@@ -11,11 +12,12 @@ const StudentsList = () => {
       fetch(url)
       .then(response => response.json())
       .then(data => setStudentsList(data))
-    }, [])
+    }, [url])
     
     //const students = [[1, "Aviel", "Turgeman", 123, "Math"],
     //                   [2, "Israel", "Israeli", 321, "Physics"]]
 
+    const { auth } = useAuth();
     const tblHeaders = ["#", "First Name", "Last Name", "ID"]
     return (
         <div>
@@ -23,9 +25,12 @@ const StudentsList = () => {
                 <h1>Students List</h1>
                 <Table data={studentsList} headers={tblHeaders} />
             </div>
+            {
+            (auth?.role === 'lecturer') &&
             <div className='row g-4' style={{textAlign: 'right', marginRight: '250px'}}>
                 <h1><FaPlusCircle /></h1>
             </div>
+            }
         </div>
     );
 }

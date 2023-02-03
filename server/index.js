@@ -66,11 +66,6 @@ const reqLogin = (req, res, next) => {
 };
 
 
-app.get('/api', isAuth, (req, res) => {
-    res.json({"users": ["user1", "user2", "user3"]})
-    // res.send("hello world!")
-})
-
 /**
  * Show relevant subjects
  */

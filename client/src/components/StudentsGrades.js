@@ -3,6 +3,7 @@ import Table from './Table';
 import { FaPlusCircle } from 'react-icons/fa';
 import './Table.css'
 import { Link } from 'react-router-dom'
+import useAuth from "../hooks/useAuth";
 
 const StudentsGrades = () => {
     const [studentsGrades, setStudentsGrades] = useState(null)
@@ -15,8 +16,9 @@ const StudentsGrades = () => {
           .then(response => response.json())
           .then(data => setStudentsGrades(data))
           .catch(error => console.error(error));
-      }, [])
+      }, [url])
 
+    const { auth } = useAuth();
     const tblHeaders = ["#", "First Name", "Last Name", "ID", "Type", "Grade", "Date"]
     return (
         <div>
@@ -31,9 +33,13 @@ const StudentsGrades = () => {
             <div>
                 <Table data={studentsGrades} headers={tblHeaders} />
             </div>
+            {
+            (auth?.role === 'lecturer') &&
+            
             <div className='row g-4' style={{textAlign: 'right', marginRight: '250px'}}>
                 <h1><FaPlusCircle /></h1>
             </div>
+            }
         </div>
     );
 }

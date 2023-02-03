@@ -11,17 +11,7 @@ import RequireAuth from './components/RequireAuth';
 import { AuthProvider } from './context/AuthProvider';
 
 function App() {
-  const [backendData, setBackendData] = useState(null)
-  
-  useEffect(() => {
-    fetch("/api")
-    .then(response => response.json())
-    .then(data => setBackendData(data))
-  }, [])
 
-  useEffect(() => {
-    console.log(backendData)
-  }, [backendData])
 /** 
   return (
     <div className="App">
