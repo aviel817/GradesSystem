@@ -78,32 +78,50 @@ app.get('/subjects', isAuth, async (req, res) => {
 })
 
 app.get('/subjects/:name', isAuth, async (req, res) => {
-    const userID = req.session.userID
+    const user_id = req.session.id
+    const userObj = await User.findById(user_id)
+    if (!userObj)
+    {
+        return res.status(403).send('user not found')
+    }
     const subjectName = req.params.name
     const subjectObj = await Subject.findOne({name: subjectName})
-    if (subjectObj)
+    if (!subjectObj)
     {
-        const grades = await Grade.find({subjectID: subjectObj._id})
-
-        const gradesTblInfo = await Promise.all(grades.map(async (grade, i) => {
-            let user = await User.findOne({ID: grade.userID})
-
-            let gradeTblInfo =  {
-                                    "#": i+1,
-                                    "First Name": user.firstName,
-                                    "Last Name": user.lastName,
-                                    ID: user.ID,
-                                    Type: grade.type,
-                                    Grade: grade.grade,
-                                    Date: grade.date
-                                }
-            return gradeTblInfo
-        }))
-        
-        res.status(200).send(JSON.stringify(gradesTblInfo))
+        return res.status(400).send('invalid subject')
     }
-
-    res.status(400).send()
+    let grades = ''
+    if (userObj.role === 'student')
+    {
+        grades = await Grade.find({subjectID: subjectObj._id})
+    }
+    else {
+        grades = await Grade.find({subjectID: subjectObj._id})
+    }
+    if (!grades)
+    {
+        return res.status(200).send() 
+    }
+    const gradesTblInfo = await Promise.all(grades.map(async (grade, i) => {
+        let user = await User.findOne({ID: grade.userID})
+        if (!user)
+        {
+            return {}
+        }
+        let gradeTblInfo =  {
+                                "#": i+1,
+                                "First Name": user.firstName,
+                                "Last Name": user.lastName,
+                                ID: user.ID,
+                                Type: grade.type,
+                                Grade: grade.grade,
+                                Date: grade.date
+                            }
+        return gradeTblInfo
+    }))
+        
+    res.status(200).send(JSON.stringify(gradesTblInfo))
+    
 })
 
 app.get('/subjects/:name/students', isAuth, async (req, res) => {
@@ -130,11 +148,56 @@ app.get('/subjects/:name/students', isAuth, async (req, res) => {
     res.status(400).send()
 })
 
+app.post('/subjects/:name/addGrade', isAuth, async (req, res) => {
+    const id = req.body.id
+    const type = req.body.type
+    const gradeValue = req.body.grade
+    const subjectName = req.params.name
+
+    if (id === '' || type === '' || gradeValue === '')
+    {
+        return res.status(400).send('empty input')
+    }
+    if (gradeValue > 100 || gradeValue < 0)
+    {
+        return res.status(400).send('invalid grade value')
+    }
+
+    const user = await User.findOne({ID: id})
+    if (!user)
+    {
+        return res.status(400).send('wrong user id')
+    }
+    //if (user.subjects.find((element) => ))
+    console.log(user.subjects.find((element)=> element.equals(mongoose.Types.ObjectID) ))
+    const subjectObj = await Subject.findOne({name: subjectName})
+    if (!subjectObj)
+    {
+        return res.status(400).send("invalid subject")
+    }
+    let date = new Date();
+    let formattedDate = date.toLocaleDateString('en-gb', {
+      day: '2-digit',
+      month: '2-digit',
+      year: '2-digit'
+    });
+
+    const newGrade = {
+        userID: id,
+        subjectID: subjectObj._id,
+        type: type,
+        grade: gradeValue,
+        date: formattedDate
+    }
+    Grade.create(newGrade, (err) => { console.log(err); })
+    res.status(200).send('added grade successfuly')
+})
+
 app.get('/login', reqLogin, (req, res) => {
     res.status(200).send()
   });
 
-app.post('/logout', (req, res) => {
+app.post('/logout', isAuth, (req, res) => {
     req.session.destroy((err) => {
         if (err) throw err;
         res.status(200).send()

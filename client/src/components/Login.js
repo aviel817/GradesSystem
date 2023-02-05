@@ -9,8 +9,11 @@ const Login = () => {
 
     const navigate = useNavigate()
     const location = useLocation()
-    const from = location.state?.from?.pathname || "/"
-    console.log(from)
+    let from = location.state?.from?.pathname || "/"
+    if (from === '/logout')
+    {
+        from = '/'
+    }
 
     const idRef = useRef()
     const errRef = useRef()

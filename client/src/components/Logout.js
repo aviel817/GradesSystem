@@ -13,7 +13,6 @@ const logoutRequest = async (setAuth) => {
     });
     console.log(response);
     if (response.status === 200) {
-      console.log("logged out");
       setAuth({});
     } else {
       console.log("error");
