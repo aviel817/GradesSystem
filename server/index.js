@@ -78,8 +78,8 @@ app.get('/subjects', isAuth, async (req, res) => {
 })
 
 app.get('/subjects/:name', isAuth, async (req, res) => {
-    const user_id = req.session.id
-    const userObj = await User.findById(user_id)
+    const user_id = req.session.userID
+    const userObj = await User.findById(mongoose.Types.ObjectId(user_id))
     if (!userObj)
     {
         return res.status(403).send('user not found')
@@ -93,14 +93,14 @@ app.get('/subjects/:name', isAuth, async (req, res) => {
     let grades = ''
     if (userObj.role === 'student')
     {
-        grades = await Grade.find({subjectID: subjectObj._id})
+        grades = await Grade.find({subjectID: subjectObj._id, userID: userObj.ID})
     }
     else {
         grades = await Grade.find({subjectID: subjectObj._id})
     }
     if (!grades)
     {
-        return res.status(200).send() 
+        return res.status(400).send() 
     }
     const gradesTblInfo = await Promise.all(grades.map(async (grade, i) => {
         let user = await User.findOne({ID: grade.userID})
@@ -193,6 +193,37 @@ app.post('/subjects/:name/addGrade', isAuth, async (req, res) => {
     res.status(200).send('added grade successfuly')
 })
 
+app.post('/subjects/:name/students/addStudent', isAuth, async (req, res) => {
+    const id = req.body.id
+    const subjectName = req.params.name
+
+    if (id === '')
+    {
+        return res.status(400).send('empty input')
+    }
+
+    const user = await User.findOne({ID: id})
+    if (!user)
+    {
+        return res.status(400).send('wrong user id')
+    }
+    
+    const subjectObj = await Subject.findOne({name: subjectName})
+    if (!subjectObj)
+    {
+        return res.status(400).send("invalid subject")
+    }
+
+    const isAlreadyAssigned = await User.findOne({ID: id, subjects: {$in: [subjectObj._id]}})
+    if (isAlreadyAssigned)
+    {
+        return res.status(400).send('Student already assigned')
+    }
+    await User.updateOne({ ID: id },
+                         { $push: {subjects: subjectObj._id} })
+    res.status(200).send('Added student successfuly')
+})
+
 app.get('/login', reqLogin, (req, res) => {
     res.status(200).send()
   });
@@ -228,7 +259,7 @@ app.post('/login', async (req, res) => {
     } else {
         return res.status(401).send()
     }
-    res.status(200).send({role: "lecturer"})
+    res.status(200).send({role: user.role})
 })
 
 app.listen(5000, ()=> {

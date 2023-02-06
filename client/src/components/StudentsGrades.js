@@ -128,7 +128,7 @@ const StudentsGrades = () => {
     return (
         <div>
             <div className='text-center'>
-                <h1>Students Grades - subject</h1>
+                <h1>Students Grades - {decodeURIComponent(window.location.pathname.split("/").pop())}</h1>
             </div>
             <div className='d-flex justify-content-end'>
                 <Link to={"students"}>
