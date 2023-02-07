@@ -17,7 +17,7 @@ function ShowAddGradeModal(props)
     {
         const [formData, setFormData] = useState({ id: '', type: '', grade: '' });
         const [errMsg, setErrMsg] = useState('')
-        const {fetchData, ...restProps} = props 
+        const {fetchData, setSucMsg, ...restProps} = props 
 
         const handleInputChange = (event) => {
           setFormData({ ...formData, [event.target.name]: event.target.value });
@@ -29,6 +29,7 @@ function ShowAddGradeModal(props)
 
         const handleSubmit = async (event) => {
             event.preventDefault();
+            setFormData({ ...formData, 'id': '', 'type': '', grade: ''})
             try {
                 const currentPath = window.location.pathname
                 const response = await fetch(currentPath+"/addGrade", {
@@ -49,6 +50,7 @@ function ShowAddGradeModal(props)
                 }
                 else
                 {
+                    setSucMsg('success: ' + await response.text())
                     props.onHide()
                 }
             } catch (err) {
@@ -135,10 +137,10 @@ const StudentsGrades = () => {
     useEffect(() => {
         setTimeout(() => {
             setSucMsg('');
-          }, 3000);
+          }, 5000);
     }, [sucMsg])
 
-    
+
     function fetchData() 
     {
         const queryString = window.location.search;
@@ -180,7 +182,7 @@ const StudentsGrades = () => {
                 <h1><FaPlusCircle onClick={() => setModalShow(true)} /></h1>
             </div>
             }
-            <ShowAddGradeModal show={modalShow} onHide={() => setModalShow(false)} fetchData={fetchData} />
+            <ShowAddGradeModal show={modalShow} onHide={() => setModalShow(false)} fetchData={fetchData} setSucMsg={setSucMsg} />
 
         </div>
     );

@@ -108,8 +108,9 @@ const StudentsList = () => {
     useEffect(() => {
         setTimeout(() => {
             setSucMsg('');
-          }, 3000);
+          }, 5000);
     }, [sucMsg])
+
 
 
     function fetchData() 
