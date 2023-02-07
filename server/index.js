@@ -168,8 +168,8 @@ app.post('/subjects/:name/addGrade', isAuth, async (req, res) => {
     {
         return res.status(400).send('wrong user id')
     }
-    //if (user.subjects.find((element) => ))
-    console.log(user.subjects.find((element)=> element.equals(mongoose.Types.ObjectID) ))
+
+    
     const subjectObj = await Subject.findOne({name: subjectName})
     if (!subjectObj)
     {

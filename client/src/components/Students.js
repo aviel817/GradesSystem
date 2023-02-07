@@ -2,6 +2,7 @@ import React, {useEffect, useState} from 'react'
 import Table from './Table';
 import { FaPlusCircle } from 'react-icons/fa';
 import './Table.css'
+import './validation.css'
 import useAuth from "../hooks/useAuth";
 
 import Button from 'react-bootstrap/Button';
@@ -15,7 +16,9 @@ import Form from 'react-bootstrap/Form'
 function ShowAddStudentModal(props)
 {
     const [formData, setFormData] = useState({ id: '' });
-    const {fetchData, ...restProps} = props 
+    const [errMsg, setErrMsg] = useState('')
+    const {fetchData, setSucMsg, ...restProps} = props
+
     const handleInputChange = (event) => {
         setFormData({ ...formData, [event.target.name]: event.target.value });
     };
@@ -37,7 +40,12 @@ function ShowAddStudentModal(props)
             console.log(response)
             if (response.status === 400)
             {
-                console.log('error: '+ await response.text())
+                setErrMsg('error: '+ await response.text())
+            }
+            else
+            {
+                setSucMsg('success: ' + await response.text())
+                props.onHide()
             }
         } catch (err) {
             console.log(err)
@@ -55,6 +63,11 @@ function ShowAddStudentModal(props)
         <Form onSubmit={handleSubmit}>
         <Modal.Body className="show-grid">
         <Container>
+        <Row>
+                {errMsg && (
+                    <p className="error">{errMsg}</p>
+                )}
+        </Row>
         <Row className='mb-4'>
             <Col className='col-4 my-auto'>
                 <Form.Label>ID</Form.Label>
@@ -66,6 +79,7 @@ function ShowAddStudentModal(props)
                     value={formData.id}
                     onChange={handleInputChange}
                     autoFocus
+                    required
                 />
             </Col>
         </Row>
@@ -74,7 +88,7 @@ function ShowAddStudentModal(props)
     </Modal.Body>
     <Modal.Footer>
         <Button onClick={props.onHide}>Close</Button>
-        <Button variant="primary" type="submit" onClick={props.onHide}>Save Changes</Button>
+        <Button variant="primary" type="submit">Save Changes</Button>
     </Modal.Footer>
     </Form>
     </Modal>
@@ -84,6 +98,14 @@ function ShowAddStudentModal(props)
 const StudentsList = () => {
     const [studentsList, setStudentsList] = useState(null)
     const [modalShow, setModalShow] = useState(false);
+    const [sucMsg, setSucMsg] = useState('')
+
+    useEffect(() => {
+        setTimeout(() => {
+            setSucMsg('');
+          }, 3000);
+    }, [sucMsg])
+
 
     function fetchData() 
     {
@@ -106,6 +128,9 @@ const StudentsList = () => {
     return (
         <div>
             <div>
+                <p className={sucMsg ? "success" : "success-hidden"}>{sucMsg}</p>
+            </div>
+            <div>
                 <h1>Students List</h1>
                 <Table data={studentsList} headers={tblHeaders} />
             </div>
@@ -115,7 +140,7 @@ const StudentsList = () => {
                 <h1><FaPlusCircle onClick={() => setModalShow(true)} /></h1>
             </div>
             }
-            <ShowAddStudentModal show={modalShow} onHide={() => setModalShow(false)} fetchData={fetchData} />
+            <ShowAddStudentModal show={modalShow} onHide={() => setModalShow(false)} fetchData={fetchData} setSucMsg={setSucMsg} />
 
         </div>
     );

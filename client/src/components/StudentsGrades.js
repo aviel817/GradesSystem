@@ -2,6 +2,7 @@ import React, {useEffect, useState} from 'react'
 import Table from './Table';
 import { FaPlusCircle } from 'react-icons/fa';
 import './Table.css'
+import './validation.css'
 import { Link } from 'react-router-dom'
 import useAuth from "../hooks/useAuth";
 
@@ -15,11 +16,16 @@ import Form from 'react-bootstrap/Form'
 function ShowAddGradeModal(props)
     {
         const [formData, setFormData] = useState({ id: '', type: '', grade: '' });
+        const [errMsg, setErrMsg] = useState('')
         const {fetchData, ...restProps} = props 
 
         const handleInputChange = (event) => {
           setFormData({ ...formData, [event.target.name]: event.target.value });
         };
+
+        useEffect(() => {
+            setErrMsg('')
+        }, [formData])
 
         const handleSubmit = async (event) => {
             event.preventDefault();
@@ -38,7 +44,12 @@ function ShowAddGradeModal(props)
                 console.log(response)
                 if (response.status === 400)
                 {
-                    console.log('error: something wrong in inputs')
+                    setErrMsg('error: '+ await response.text())
+                    //console.log('error: something wrong in inputs')
+                }
+                else
+                {
+                    props.onHide()
                 }
             } catch (err) {
                 console.log(err)
@@ -56,6 +67,11 @@ function ShowAddGradeModal(props)
             <Form onSubmit={handleSubmit}>
             <Modal.Body className="show-grid">
             <Container>
+            <Row>
+                {errMsg && (
+                    <p className="error">{errMsg}</p>
+                )}
+            </Row>
             <Row className='mb-4'>
                 <Col className='col-4 my-auto'>
                     <Form.Label>ID</Form.Label>
@@ -67,6 +83,7 @@ function ShowAddGradeModal(props)
                         value={formData.id}
                         onChange={handleInputChange}
                         autoFocus
+                        required
                     />
                 </Col>
             </Row>
@@ -80,6 +97,7 @@ function ShowAddGradeModal(props)
                         name="type"
                         value={formData.type}
                         onChange={handleInputChange}
+                        required
                     />
                 </Col>
             </Row>
@@ -93,6 +111,7 @@ function ShowAddGradeModal(props)
                         name="grade"
                         value={formData.grade}
                         onChange={handleInputChange}
+                        required
                     />
                 </Col>
             </Row>
@@ -100,7 +119,7 @@ function ShowAddGradeModal(props)
         </Modal.Body>
         <Modal.Footer>
             <Button onClick={props.onHide}>Close</Button>
-            <Button variant="primary" type="submit" onClick={props.onHide}>Save Changes</Button>
+            <Button variant="primary" type="submit">Save Changes</Button>
         </Modal.Footer>
         </Form>
         </Modal>
@@ -111,7 +130,15 @@ function ShowAddGradeModal(props)
 const StudentsGrades = () => {
     const [studentsGrades, setStudentsGrades] = useState(null)
     const [modalShow, setModalShow] = useState(false);
+    const [sucMsg, setSucMsg] = useState('')
 
+    useEffect(() => {
+        setTimeout(() => {
+            setSucMsg('');
+          }, 3000);
+    }, [sucMsg])
+
+    
     function fetchData() 
     {
         const queryString = window.location.search;
@@ -132,6 +159,9 @@ const StudentsGrades = () => {
 
     return (
         <div>
+            <div>
+                <p className={sucMsg ? "success" : "success-hidden"}>{sucMsg}</p>
+            </div>
             <div className='text-center'>
                 <h1>Students Grades - {decodeURIComponent(window.location.pathname.split("/").pop())}</h1>
             </div>
