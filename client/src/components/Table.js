@@ -1,3 +1,12 @@
+import { MdOutlineDeleteOutline } from 'react-icons/md';
+
+function deleteRow(deleteRow) 
+{
+    console.log(deleteRow)
+    console.log("ID: " + deleteRow.ID)
+    console.log("TYPE: " + deleteRow.Type)
+}
+
 const Table = (props) => {
     console.log(props)
     if (props?.data && props?.headers)
@@ -8,7 +17,8 @@ const Table = (props) => {
                     <tr>
                         { props.headers.map((header, i) => {
                             return (<th key={i}>{header}</th>);
-                        }) }
+                        }) 
+                        }
                     </tr>
                 </thead>
                 <tbody>
@@ -18,7 +28,9 @@ const Table = (props) => {
                         { props.headers.map((header, k) => {
                             return (<td key={i+k}>{row[header]}</td>)
                           })
+                          
                         }
+                        <h1><MdOutlineDeleteOutline onClick={() => deleteRow(row)}/></h1>
                     </tr>
                     )})}
                 </tbody>
