@@ -169,12 +169,18 @@ app.post('/subjects/:name/addGrade', isAuth, async (req, res) => {
         return res.status(400).send('wrong user id')
     }
 
-    
     const subjectObj = await Subject.findOne({name: subjectName})
     if (!subjectObj)
     {
         return res.status(400).send("invalid subject")
     }
+
+    const checkExistingGrade = await Grade.findOne({userID: id, type: type})
+    if (checkExistingGrade)
+    {
+        return res.status(400).send("The user already have grade for this type")
+    }
+
     let date = new Date();
     let formattedDate = date.toLocaleDateString('en-gb', {
       day: '2-digit',

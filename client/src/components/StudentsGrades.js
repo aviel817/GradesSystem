@@ -69,12 +69,15 @@ function ShowAddGradeModal(props)
             <Form onSubmit={handleSubmit}>
             <Modal.Body className="show-grid">
             <Container>
-            <Row>
-                {errMsg && (
-                    <p className="error">{errMsg}</p>
-                )}
+            <Row className='error'>
+                <Col className='errIcon col-1'></Col>
+                <Col className='errText'> 
+                    {errMsg && (
+                        <p>{errMsg}</p>
+                    )}
+                </Col>
             </Row>
-            <Row className='mb-4'>
+            <Row className='mt-4 mb-4'>
                 <Col className='col-4 my-auto'>
                     <Form.Label>ID</Form.Label>
                 </Col>
