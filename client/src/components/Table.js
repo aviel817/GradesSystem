@@ -1,10 +1,14 @@
 import { MdOutlineDeleteOutline } from 'react-icons/md';
+import { deleteGradeFunc, deleteStudentFunc } from './deleteFuncs'
 
-function deleteRow(deleteRow) 
-{
-    console.log(deleteRow)
-    console.log("ID: " + deleteRow.ID)
-    console.log("TYPE: " + deleteRow.Type)
+
+const tblFuncsMap = new Map([
+    ["gradesDelFunc", deleteGradeFunc],
+    ["studentDelFunc", deleteStudentFunc]
+])
+
+const callDelFunction = (funcName, row) => {
+    return tblFuncsMap.get(funcName)(row)
 }
 
 const Table = (props) => {
@@ -30,7 +34,7 @@ const Table = (props) => {
                           })
                           
                         }
-                        <h1><MdOutlineDeleteOutline onClick={() => deleteRow(row)}/></h1>
+                        <h1><MdOutlineDeleteOutline onClick={() => callDelFunction(props.delFuncName, row)}/></h1>
                     </tr>
                     )})}
                 </tbody>

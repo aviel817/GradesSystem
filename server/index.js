@@ -222,6 +222,7 @@ app.post('/subjects/:name/deleteGrade', isAuth, async (req, res) => {
     }
 
     const checkExistingGrade = await Grade.findOne({userID: id, type: type})
+
     if (!checkExistingGrade)
     {
         return res.status(400).send("The user doesn't have grade for this type")

@@ -176,7 +176,7 @@ const StudentsGrades = () => {
                 </Link>
             </div>
             <div>
-                <Table data={studentsGrades} headers={tblHeaders} />
+                <Table data={studentsGrades} headers={tblHeaders} delFuncName="gradesDelFunc" />
             </div>
             {
             (auth?.role === 'lecturer') &&

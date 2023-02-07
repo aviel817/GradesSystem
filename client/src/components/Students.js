@@ -138,7 +138,7 @@ const StudentsList = () => {
             </div>
             <div>
                 <h1>Students List</h1>
-                <Table data={studentsList} headers={tblHeaders} />
+                <Table data={studentsList} headers={tblHeaders} delFuncName="studentDelFunc" />
             </div>
             {
             (auth?.role === 'lecturer') &&
