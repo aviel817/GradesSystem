@@ -199,6 +199,40 @@ app.post('/subjects/:name/addGrade', isAuth, async (req, res) => {
     res.status(200).send('added grade successfuly')
 })
 
+app.post('/subjects/:name/deleteGrade', isAuth, async (req, res) => {
+    const id = req.body.id
+    const type = req.body.type
+    const subjectName = req.params.name
+
+    if (id === '' || type === '')
+    {
+        return res.status(400).send('empty input')
+    }
+
+    const user = await User.findOne({ID: id})
+    if (!user)
+    {
+        return res.status(400).send('wrong user id')
+    }
+
+    const subjectObj = await Subject.findOne({name: subjectName})
+    if (!subjectObj)
+    {
+        return res.status(400).send("invalid subject")
+    }
+
+    const checkExistingGrade = await Grade.findOne({userID: id, type: type})
+    if (!checkExistingGrade)
+    {
+        return res.status(400).send("The user doesn't have grade for this type")
+    }
+
+
+    await Grade.deleteOne({userID: id, type: type});
+
+    res.status(200).send('Deleted grade successfuly')
+})
+
 app.post('/subjects/:name/students/addStudent', isAuth, async (req, res) => {
     const id = req.body.id
     const subjectName = req.params.name
@@ -228,6 +262,38 @@ app.post('/subjects/:name/students/addStudent', isAuth, async (req, res) => {
     await User.updateOne({ ID: id },
                          { $push: {subjects: subjectObj._id} })
     res.status(200).send('Added student successfuly')
+})
+
+app.post('/subjects/:name/students/deleteStudent', isAuth, async (req, res) => {
+    const id = req.body.id
+    const subjectName = req.params.name
+
+    if (id === '')
+    {
+        return res.status(400).send('empty input')
+    }
+
+    const user = await User.findOne({ID: id})
+    if (!user)
+    {
+        return res.status(400).send('wrong user id')
+    }
+    
+    const subjectObj = await Subject.findOne({name: subjectName})
+    if (!subjectObj)
+    {
+        return res.status(400).send("invalid subject")
+    }
+
+    const isAlreadyAssigned = await User.findOne({ID: id, subjects: {$in: [subjectObj._id]}})
+    if (!isAlreadyAssigned)
+    {
+        return res.status(400).send("Student isn't assigned")
+    }
+
+    await User.updateOne({ ID: id },
+                         { $pull: {subjects: subjectObj._id} })
+    res.status(200).send('Student deleted from the course successfuly')
 })
 
 app.get('/login', reqLogin, (req, res) => {
