@@ -23,8 +23,13 @@ function ShowAddStudentModal(props)
         setFormData({ ...formData, [event.target.name]: event.target.value });
     };
 
+    useEffect(() => {
+        setErrMsg('')
+    }, [formData])
+
     const handleSubmit = async (event) => {
         event.preventDefault();
+        setFormData({ ...formData, 'id': '' })
         try {
             const currentPath = window.location.pathname
             const response = await fetch(currentPath+"/addStudent", {
