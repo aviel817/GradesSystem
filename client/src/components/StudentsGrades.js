@@ -15,6 +15,7 @@ import Form from 'react-bootstrap/Form'
 function ShowAddGradeModal(props)
     {
         const [formData, setFormData] = useState({ id: '', type: '', grade: '' });
+        const {fetchData, ...restProps} = props 
 
         const handleInputChange = (event) => {
           setFormData({ ...formData, [event.target.name]: event.target.value });
@@ -42,10 +43,11 @@ function ShowAddGradeModal(props)
             } catch (err) {
                 console.log(err)
             }
+            fetchData()
         }
 
         return (
-            <Modal {...props} aria-labelledby="contained-modal-title-vcenter">
+            <Modal {...restProps} aria-labelledby="contained-modal-title-vcenter">
             <Modal.Header closeButton>
             <Modal.Title id="contained-modal-title-vcenter">
             Add new grade
@@ -106,23 +108,26 @@ function ShowAddGradeModal(props)
     }
 
 
-
 const StudentsGrades = () => {
     const [studentsGrades, setStudentsGrades] = useState(null)
+    const [modalShow, setModalShow] = useState(false);
 
-    //const [queryString] = useState(window.location.search)
-    const queryString = window.location.search;
-    const url = `${window.location.origin}${window.location.pathname}${queryString}`;
-    useEffect(() => {
+    function fetchData() 
+    {
+        const queryString = window.location.search;
+        const url = `${window.location.origin}${window.location.pathname}${queryString}`;
+    
         fetch(url)
-          .then(response => response.json())
-          .then(data => setStudentsGrades(data))
-          .catch(error => console.error(error));
-      }, [url])
+        .then(response => response.json())
+        .then(data => setStudentsGrades(data))
+    }
+
+    useEffect(() => {
+            fetchData()
+      }, [])
 
     const { auth } = useAuth();
     const tblHeaders = ["#", "First Name", "Last Name", "ID", "Type", "Grade", "Date"]
-    const [modalShow, setModalShow] = useState(false);
 
 
     return (
@@ -145,7 +150,7 @@ const StudentsGrades = () => {
                 <h1><FaPlusCircle onClick={() => setModalShow(true)} /></h1>
             </div>
             }
-            <ShowAddGradeModal show={modalShow} onHide={() => setModalShow(false)} />
+            <ShowAddGradeModal show={modalShow} onHide={() => setModalShow(false)} fetchData={fetchData} />
 
         </div>
     );

@@ -12,13 +12,10 @@ import Row from 'react-bootstrap/Row';
 import Form from 'react-bootstrap/Form'
 
 
-
-
-
 function ShowAddStudentModal(props)
 {
     const [formData, setFormData] = useState({ id: '' });
-
+    const {fetchData, ...restProps} = props 
     const handleInputChange = (event) => {
         setFormData({ ...formData, [event.target.name]: event.target.value });
     };
@@ -45,11 +42,11 @@ function ShowAddStudentModal(props)
         } catch (err) {
             console.log(err)
         }
-        props.fetchData()
+        fetchData()
     }
 
     return (
-        <Modal {...props} aria-labelledby="contained-modal-title-vcenter">
+        <Modal {...restProps} aria-labelledby="contained-modal-title-vcenter">
         <Modal.Header closeButton>
         <Modal.Title id="contained-modal-title-vcenter">
         Add new student
@@ -84,7 +81,6 @@ function ShowAddStudentModal(props)
     )
 }
 
-
 const StudentsList = () => {
     const [studentsList, setStudentsList] = useState(null)
     const [modalShow, setModalShow] = useState(false);
@@ -103,10 +99,6 @@ const StudentsList = () => {
         fetchData()
     }, [])
 
-
-    
-    //const students = [[1, "Aviel", "Turgeman", 123, "Math"],
-    //                   [2, "Israel", "Israeli", 321, "Physics"]]
 
     const { auth } = useAuth();
     const tblHeaders = ["#", "First Name", "Last Name", "ID"]
@@ -128,7 +120,6 @@ const StudentsList = () => {
         </div>
     );
 }
-
 
 
 export default StudentsList;
