@@ -132,7 +132,7 @@ router.post('/:name/addGrade', isAuth, async (req, res) => {
         return res.status(400).send("invalid subject")
     }
 
-    const checkExistingGrade = await Grade.findOne({userID: id, type: type})
+    const checkExistingGrade = await Grade.findOne({userID: id, subject: subjectObj._id, type: type})
     if (checkExistingGrade)
     {
         return res.status(400).send("The user already have grade for this type")
