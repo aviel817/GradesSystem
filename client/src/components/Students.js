@@ -104,6 +104,8 @@ const StudentsList = () => {
     const [studentsList, setStudentsList] = useState(null)
     const [modalShow, setModalShow] = useState(false);
     const [sucMsg, setSucMsg] = useState('')
+    const [searchStudents, setSearchStudents] = useState('')
+
 
     useEffect(() => {
         setTimeout(() => {
@@ -120,8 +122,22 @@ const StudentsList = () => {
     
         fetch(url)
         .then(response => response.json())
-        .then(data => setStudentsList(data))
+        .then(data => {
+            setStudentsList(data)
+            setSearchStudents(data)
+        })
     }
+
+    const handleSearch = (event) => {
+        if (!event.target.value)
+        {
+            return setSearchStudents(studentsList)
+        }
+
+        const searchRes = studentsList.filter(grade => (grade.ID).toString().startsWith(event.target.value))
+        setSearchStudents(searchRes)
+    }
+
 
     useEffect(() => {
         fetchData()
@@ -138,7 +154,31 @@ const StudentsList = () => {
             </div>
             <div>
                 <h1>Students List</h1>
-                <Table data={studentsList} headers={tblHeaders} delFuncName="studentDelFunc" />
+            </div>
+            {
+            (auth?.role === 'lecturer') &&
+            <Row className='searchBar w-25 mt-4 m-auto'>
+                <Col>
+                    Search by ID:
+                </Col>
+                <Col>
+                    <input 
+                        className='search_input w-50'
+                        type="text"
+                        name="searchInp"
+                        onChange={handleSearch}
+                    />
+                </Col>
+            </Row>
+            }
+            <div>
+                {
+                (auth?.role === 'lecturer') 
+                ?
+                <Table data={searchStudents} headers={tblHeaders} delFuncName="studentDelFunc" searchGrades={searchStudents} setSearchGrades={setSearchStudents} />
+                :
+                <Table data={studentsList} headers={tblHeaders} />
+                }
             </div>
             {
             (auth?.role === 'lecturer') &&

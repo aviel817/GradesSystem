@@ -13,13 +13,6 @@ import { AuthProvider } from './context/AuthProvider';
 
 function App() {
 
-/** 
-  return (
-    <div className="App">
-      {!(backendData && backendData.users) ? "Loading..." : backendData.users.map(user => (<p>{user}</p>))}
-    </div>
-  );
-  */
   return (
     <BrowserRouter>
       <AuthProvider>
