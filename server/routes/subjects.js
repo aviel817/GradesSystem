@@ -87,7 +87,7 @@ router.get('/:name/students', isAuth, async (req, res) => {
     const subjectObj = await Subject.findOne({name: subjectName})
     if (subjectObj)
     {
-        const users = await User.find({subjects: subjectObj._id})
+        const users = await User.find({subjects: subjectObj._id, role: {$ne: "lecturer"}})
         const studentsList = users.map((user, i) => {
             let studentInfo = {
                                 "#": i+1, 
@@ -136,6 +136,12 @@ router.post('/:name/addGrade', isAuth, async (req, res) => {
     if (checkExistingGrade)
     {
         return res.status(400).send("The user already have grade for this type")
+    }
+
+    const isAssigned = await User.findOne({ID: id, subjects: {$in: [subjectObj._id]}})
+    if (!isAssigned)
+    {
+        return res.status(400).send("Student isn't assigned to this subject")
     }
 
     let date = new Date();
