@@ -2,14 +2,10 @@ const express = require("express")
 const mongoose = require("mongoose")
 const app = express()
 const secrets = require('./.secrets')
-const isAuth = require('./middleware/isAuth')
-const reqLogin = require('./middleware/reqLogin')
+
 const expressSession = require('express-session')
 const MongoDBStore = require('connect-mongodb-session')(expressSession);
 const bodyParser = require('body-parser');
-const User = require("./models/User")
-const Subject = require("./models/Subject")
-const Grade = require("./models/Grade")
 
 mongoose.set('strictQuery', false);
 
