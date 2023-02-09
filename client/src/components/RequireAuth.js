@@ -7,7 +7,6 @@ function getFromLocation(location)
     {
         location.state.from = '/'
         location.reload(); 
-        //return location
     }
     else
     {

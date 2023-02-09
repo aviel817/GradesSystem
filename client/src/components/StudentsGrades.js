@@ -46,7 +46,6 @@ function ShowAddGradeModal(props)
                 if (response.status === 400)
                 {
                     setErrMsg('error: '+ await response.text())
-                    //console.log('error: something wrong in inputs')
                 }
                 else
                 {

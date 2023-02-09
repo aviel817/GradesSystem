@@ -23,8 +23,7 @@ const Subjects = () => {
                     <Card style={{ width: '18rem'}}>
                         <Card.Body>
                         <Card.Title>{subject}</Card.Title>
-                        {/*<Card.Text>
-                        </Card.Text>*/}
+
                         <Link to={"/subjects/"+subject}>
                                 <Button variant="primary">Grades</Button>
                         </Link>
