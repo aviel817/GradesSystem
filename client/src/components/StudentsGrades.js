@@ -136,6 +136,7 @@ const StudentsGrades = () => {
     const [studentsGrades, setStudentsGrades] = useState(null)
     const [modalShow, setModalShow] = useState(false);
     const [sucMsg, setSucMsg] = useState('')
+    const [searchGrades, setSearchGrades] = useState('')
 
     useEffect(() => {
         setTimeout(() => {
@@ -151,7 +152,20 @@ const StudentsGrades = () => {
     
         fetch(url)
         .then(response => response.json())
-        .then(data => setStudentsGrades(data))
+        .then(data => {
+            setStudentsGrades(data)
+            setSearchGrades(data)
+        })
+    }
+
+    const handleSearch = (event) => {
+        if (!event.target.value)
+        {
+            return setSearchGrades(studentsGrades)
+        }
+
+        const searchRes = studentsGrades.filter(grade => (grade.ID).toString().startsWith(event.target.value))
+        setSearchGrades(searchRes)
     }
 
     useEffect(() => {
@@ -170,13 +184,35 @@ const StudentsGrades = () => {
             <div className='text-center'>
                 <h1>Students Grades - {decodeURIComponent(window.location.pathname.split("/").pop())}</h1>
             </div>
+            {
+            (auth?.role === 'lecturer') &&
+            <Row className='searchBar w-25 mt-4 m-auto'>
+                <Col>
+                    Search by ID:
+                </Col>
+                <Col>
+                    <input 
+                        className='search_input w-50'
+                        type="text"
+                        name="searchInp"
+                        onChange={handleSearch}
+                    />
+                </Col>
+            </Row>
+            }
             <div className='d-flex justify-content-end'>
                 <Link to={"students"}>
                     <button className='btn btn-primary'>Students List</button>
                 </Link>
             </div>
             <div>
-                <Table data={studentsGrades} headers={tblHeaders} delFuncName="gradesDelFunc" />
+                {
+                (auth?.role === 'lecturer') 
+                ?
+                <Table data={searchGrades} headers={tblHeaders} delFuncName="gradesDelFunc" searchGrades={searchGrades} setSearchGrades={setSearchGrades} />
+                :
+                <Table data={studentsGrades} headers={tblHeaders} />
+                }
             </div>
             {
             (auth?.role === 'lecturer') &&

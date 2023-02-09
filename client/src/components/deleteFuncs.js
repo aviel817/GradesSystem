@@ -18,10 +18,12 @@ export async function deleteGradeFunc(row)
         if (response.status === 400)
         {
             alert('error: '+ await response.text())
+            return false
         }
         else
         {
             alert('success: ' + await response.text())
+            return true
         }
     } catch (err) {
         console.log(err)
@@ -47,10 +49,12 @@ export async function deleteStudentFunc(row)
         if (response.status === 400)
         {
             alert('error: '+ await response.text())
+            return false
         }
         else
         {
             alert('success: ' + await response.text())
+            return true
         }
     } catch (err) {
         console.log(err)

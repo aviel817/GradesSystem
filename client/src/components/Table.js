@@ -34,7 +34,17 @@ const Table = (props) => {
                           })
                           
                         }
-                        <h1><MdOutlineDeleteOutline onClick={() => callDelFunction(props.delFuncName, row)}/></h1>
+                        {
+                        props?.delFuncName &&
+                        <h1><MdOutlineDeleteOutline onClick={() => {
+                                if (callDelFunction(props.delFuncName, row))
+                                {
+                                    props.setSearchGrades(props.searchGrades.filter((grade, k) => k !== i))
+                                }
+                                
+                            }
+                            } /></h1>
+                        }
                     </tr>
                     )})}
                 </tbody>
