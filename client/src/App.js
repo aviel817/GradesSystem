@@ -1,9 +1,10 @@
-import React, {useEffect, useState} from 'react'
+import React from 'react'
 import { BrowserRouter, Routes, Route} from 'react-router-dom';
 import StudentsGrades from './components/StudentsGrades';
 import Navbar from './components/Navbar';
 import Subjects from './components/Subjects';
 import Students from './components/Students';
+import NotFound from './components/NotFound'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Login from './components/Login';
 import Logout from './components/Logout';
@@ -32,7 +33,7 @@ function App() {
               <Route path="/logout" element={<Logout />} />
             </Route>
             <Route path="/login" element={<Login />} />
-
+            <Route path="*" element={<NotFound />} />
 
           </Route>
         </Routes>
