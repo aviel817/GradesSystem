@@ -17,10 +17,6 @@ const dbURL = secrets.dbURL
 const cookieSecret = secrets.cookieSecret
 
 
-
-// Login -> Subjects -> Subject Grades
-
-
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.json());
 
